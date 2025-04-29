@@ -1,12 +1,19 @@
 import { ActionTypes } from "../constants/action-types";
-const intialState = {
+
+const initialState = {
   products: [],
+  loading: false,
+  error: null
 };
 
-export const productsReducer = (state = intialState, { type, payload }) => {
+export const productsReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    case ActionTypes.SET_PRODUCTS:
-      return { ...state, products: payload };
+    case ActionTypes.FETCH_PRODUCTS_REQUEST:
+      return { ...state, loading: true, error: null };
+    case ActionTypes.FETCH_PRODUCTS_SUCCESS:
+      return { ...state, products: payload, loading: false, error: null };
+    case ActionTypes.FETCH_PRODUCTS_FAILURE:
+      return { ...state, loading: false, error: payload };
     default:
       return state;
   }

@@ -1,32 +1,17 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setProducts } from "../redux/actions/productsActions";
+import { fetchProducts } from "../redux/actions/productsActions";
 import ProductComponent from "./ProductComponent";
 
 const ProductListing = () => {
   const products = useSelector((state) => state.allProducts.products);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const loading = useSelector((state) => state.allProducts.loading);
+  const error = useSelector((state) => state.allProducts.error);
   const dispatch = useDispatch();
 
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get("https://fakestoreapi.com/products");
-      dispatch(setProducts(response.data));
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching products:", err);
-      setError("Failed to fetch products. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   if (loading) {
     return <div className="ui container">Loading...</div>;
